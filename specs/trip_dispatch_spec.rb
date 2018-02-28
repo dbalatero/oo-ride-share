@@ -92,4 +92,44 @@ describe "TripDispatcher class" do
 
     end
   end
+
+  describe "request_trip(passenger_id) method" do
+
+    # it "verifies the validity of the passenger_id" do
+    #
+    # end
+
+    it "iterates through all drivers and selects the first driver where status is :AVAILABLE" do
+
+    end
+
+    it "raises an error or return nil if no drivers are available" do
+
+    end
+
+    it "stores the current time as the start_time" do
+
+    end
+
+    it "sets the defaults for end_time, cost, and rating to nil" do
+
+    end
+
+    it "creates a new instance of Trip" do
+
+    end
+# These tests will be testing that the new helper methods are being called appropriately...
+    it "stores new instance of Trip in corresponding passenger's collection of Trips" do
+
+    end
+
+    it "stores new instance of Trip in corresponding driver's collection of Trips" do
+
+    end
+
+    it "stores new instance of Trip in TripDispatcher's collection of Trips" do
+
+    end
+
+  end
 end
