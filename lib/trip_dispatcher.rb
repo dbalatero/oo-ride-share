@@ -75,8 +75,8 @@ module RideShare
           id: raw_trip[:id].to_i,
           driver: driver,
           passenger: passenger,
-          start_time: raw_trip[:start_time],
-          end_time: raw_trip[:end_time],
+          start_time: Time.parse(raw_trip[:start_time]),
+          end_time: Time.parse(raw_trip[:end_time]),
           cost: raw_trip[:cost].to_f,
           rating: raw_trip[:rating].to_i
         }
@@ -86,10 +86,10 @@ module RideShare
         passenger.add_trip(trip)
         trips << trip
       end
-
       trips
     end
 
+    # In Ruby, by default, all methods are 'public'. We can circumvent this by creating a private method, so that no other classes or objects can call it. Any methods listed under the 'private' keyword will be private. Often simple helper methods go here. NOTE: In Ruby, in general, order of method definitions does not matter (except for 'private') but in other languages, order does matter.
     private
 
     def check_id(id)

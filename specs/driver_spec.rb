@@ -76,5 +76,19 @@ describe "Driver class" do
       driver = RideShare::Driver.new(id: 54, name: "Rogers Bartell IV", vin: "1C9EVBRM0YBC564DZ")
       driver.average_rating.must_equal 0
     end
+
+    # For a given driver, calculate their total revenue for all trips. Each driver gets 80% of the trip cost after a fee of $1.65 is subtracted.
+    # xdescribe "get_total_revenue" do
+    #
+    #   xit "gets total revenue" do
+    #     # Arrange
+    #     # Act
+    #     total_rev = @driver.get_total_revenue
+    #     # Assert
+    #     total_rev.must_equal 1000
+    #   end
+    #
+    # end
+
   end
 end

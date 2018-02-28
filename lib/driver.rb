@@ -43,5 +43,17 @@ module RideShare
 
       @trips << trip
     end
+
+    # PSEUDOCODE:
+    # get total rev method
+    #   total_rev starts at 0
+    #   need all_trips
+    #   iterate through each trip in all_trips
+    #     fee is 1.65
+    #     get trip_cost from each trip
+    #     trip_rev is (trip_cost - fee) * .8
+    #     trip_rev adds to total_rev
+    #   end
+    # return total_rev
   end
 end
