@@ -10,7 +10,7 @@ module RideShare
       @passenger = input[:passenger]
       @start_time = check_start_time(input[:start_time])
       @end_time = check_end_time(input[:end_time])
-      @cost = input[:cost]
+      @cost = input[:cost].to_f
       @rating = input[:rating]
 
       if @rating > 5 || @rating < 1
@@ -31,8 +31,6 @@ module RideShare
       if (@end_time != nil && @start_time != nil) && (@end_time != @start_time)
         if @end_time < @start_time
           raise ArgumentError.new("Start time must be before end time.")
-        # elsif @end_time == @start_time
-        #   raise ArgumentError.new("Start time must be before end time.")
         end
       end
     end
