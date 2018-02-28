@@ -44,16 +44,13 @@ module RideShare
       @trips << trip
     end
 
-    # PSEUDOCODE:
-    # get total rev method
-    #   total_rev starts at 0
-    #   need all_trips
-    #   iterate through each trip in all_trips
-    #     fee is 1.65
-    #     get trip_cost from each trip
-    #     trip_rev is (trip_cost - fee) * .8
-    #     trip_rev adds to total_rev
-    #   end
-    # return total_rev
+
+    def get_total_revenue
+      # total_rev = 0
+      total_rev = @trips.map { |trip| (trip.cost - 1.65) * 0.8}.inject(0, :+)
+      return total_rev.round(2)
+    end
+
+
   end
 end

@@ -92,4 +92,24 @@ describe "Driver class" do
     # end
 
   end
+
+  describe "get_total_revenue method" do
+
+    it "gets total revenue for a driver" do
+      driver_1 = RideShare::Driver.new(id: 3, name: "Daryl Nitzsche", vin: "SAL6P2M2XNHC5Y656", status: "AVAILABLE")
+
+      trip_1 = RideShare::Trip.new({id: 430, driver: driver_1, passenger: 15, start_time: "2016-02-10T21:07:00+00:00", end_time: "2016-02-10T21:21:00+00:00", cost: "23.88", rating: 5})
+      trip_2 = RideShare::Trip.new({id: 593, driver: driver_1, passenger: 158, start_time: "2015-10-08T15:01:00+00:00", end_time: "2015-10-08T15:44:00+00:00", cost: "26.91", rating: 5})
+      trip_3 = RideShare::Trip.new({id: 312, driver: driver_1, passenger: 279, start_time: "2015-10-07T01:03:00+00:00", end_time: "2015-10-07T01:40:00+00:00", cost: "14.52", rating: 1})
+
+      driver_1.add_trip(trip_1)
+      driver_1.add_trip(trip_2)
+      driver_1.add_trip(trip_3)
+
+      total_rev = driver_1.get_total_revenue
+
+      total_rev.must_equal 48.29
+    end
+
+  end
 end
