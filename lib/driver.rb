@@ -44,11 +44,20 @@ module RideShare
       @trips << trip
     end
 
-
     def get_total_revenue
-      # total_rev = 0
       total_rev = @trips.map { |trip| (trip.cost - 1.65) * 0.8}.inject(0, :+)
       return total_rev.round(2)
+    end
+
+    def total_hours_driving
+      total_seconds = @trips.map{ |trip| trip.end_time - trip.start_time}.inject(0, :+)
+      total_hours = total_seconds / 3600
+      return total_hours.round(2)
+    end
+
+    def avg_revenue_per_hour
+      avg_rev_per_hour = get_total_revenue / total_hours_driving
+      return avg_rev_per_hour.round(2)
     end
 
 
