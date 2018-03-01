@@ -2,17 +2,6 @@ require_relative 'spec_helper'
 
 describe "Passenger class" do
 
-  before do
-    @passenger_1 = RideShare::Passenger.new(id: 54, name: "Gracie Emmerich", phone: "591-707-1595 x0908", trips: [])
-
-    trip_1 = RideShare::Trip.new({id: 1, driver: 1, passenger: @passenger_1, start_time: "2016-04-05T14:01:00+00:00", end_time: "2016-04-05T14:09:00+00:00", cost: "17.39", rating: 3})
-    trip_2 = RideShare::Trip.new({id: 342, driver: 39, passenger: @passenger_1, start_time: "2016-02-29T04:02:00+00:00", end_time: "2016-02-29T04:50:00+00:00", cost: "26.58", rating: 2})
-
-    @passenger_1.add_trip(trip_1)
-    @passenger_1.add_trip(trip_2)
-
-  end
-
   describe "Passenger instantiation" do
     before do
       @passenger = RideShare::Passenger.new({id: 1, name: "Smithy", phone: "353-533-5334"})
@@ -89,6 +78,16 @@ describe "Passenger class" do
 
   describe "total_spent method" do
 
+    before do
+      @passenger_1 = RideShare::Passenger.new(id: 54, name: "Gracie Emmerich", phone: "591-707-1595 x0908", trips: [])
+
+      trip_1 = RideShare::Trip.new({id: 1, driver: 1, passenger: @passenger_1, start_time: "2016-04-05T14:01:00+00:00", end_time: "2016-04-05T14:09:00+00:00", cost: "17.39", rating: 3})
+      trip_2 = RideShare::Trip.new({id: 342, driver: 39, passenger: @passenger_1, start_time: "2016-02-29T04:02:00+00:00", end_time: "2016-02-29T04:50:00+00:00", cost: "26.58", rating: 2})
+
+      @passenger_1.add_trip(trip_1)
+      @passenger_1.add_trip(trip_2)
+    end
+
     it "returns the total amount of money that a passenger has spent on all of their trips" do
       @passenger_1.total_spent.must_equal 43.97
       @passenger_1.total_spent.must_be_kind_of Float
@@ -97,9 +96,19 @@ describe "Passenger class" do
 
   describe "total_time method" do
 
+    before do
+      @passenger_2 = RideShare::Passenger.new(id: 54, name: "Gracie Emmerich", phone: "591-707-1595 x0908", trips: [])
+
+      trip_1 = RideShare::Trip.new({id: 1, driver: 1, passenger: @passenger_2, start_time: "2016-04-05T14:01:00+00:00", end_time: "2016-04-05T14:09:00+00:00", cost: "17.39", rating: 3})
+      trip_2 = RideShare::Trip.new({id: 342, driver: 39, passenger: @passenger_2, start_time: "2016-02-29T04:02:00+00:00", end_time: "2016-02-29T04:50:00+00:00", cost: "26.58", rating: 2})
+
+      @passenger_2.add_trip(trip_1)
+      @passenger_2.add_trip(trip_2)
+    end
+
     it "returns the total amount of time that a passenger has spent on all of their trips" do
-      @passenger_1.total_time.must_equal 3360.0
-      @passenger_1.total_time.must_be_kind_of Float
+      @passenger_2.total_time.must_equal 3360.0
+      @passenger_2.total_time.must_be_kind_of Float
     end
   end
 end
