@@ -13,6 +13,7 @@ describe "Driver class" do
     @driver_1.add_trip(trip_1)
     @driver_1.add_trip(trip_2)
     @driver_1.add_trip(trip_3)
+
   end
 
   describe "Driver instantiation" do
@@ -96,7 +97,6 @@ describe "Driver class" do
 
     it "gets total revenue for a driver" do
       total_rev = @driver_1.get_total_revenue
-
       total_rev.must_equal 48.29
     end
   end
