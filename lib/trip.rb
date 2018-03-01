@@ -10,12 +10,9 @@ module RideShare
       @passenger = input[:passenger]
       @start_time = check_start_time(input[:start_time])
       @end_time = check_end_time(input[:end_time])
-      @cost = input[:cost].to_f
+      @cost = check_cost(input[:cost])
       @rating = check_rating(input[:rating])
 
-      # if @rating > 5 || @rating < 1
-      #   raise ArgumentError.new("Invalid rating #{@rating}")
-      # end
       check_time
 
     end
@@ -26,6 +23,14 @@ module RideShare
     end
 
     private
+
+    def check_cost(cost_input)
+      if cost_input == nil
+        return nil
+      else
+        return cost_input.to_f
+      end
+    end
 
     def check_rating(rating_input)
       if rating_input != nil
