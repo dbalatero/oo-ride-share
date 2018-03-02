@@ -7,7 +7,8 @@ require_relative 'trip'
 
 module RideShare
   class TripDispatcher
-    attr_reader :drivers, :passengers, :trips
+    attr_reader :passengers, :trips
+    attr_accessor :drivers
 
     def initialize
       @drivers = load_drivers
@@ -90,46 +91,24 @@ module RideShare
     end
 
     def request_trip(passenger_id)
-<<<<<<< HEAD
+      passenger = verify_passenger(passenger_id)
       driver = next_available_driver
-      driver.unavailable!
+      if driver != nil
+        driver.unavailable!
+      end
 
-      Trip.new(driver: driver)
+      Trip.new(id: trips.length + 1, driver: driver, passenger: passenger, start_time: Time.now)
     end
 
-=======
-    #   #add something to check that passenger id already exists!
-    #   check_id(passenger_id)
-    #   passenger = passenger_id
-    #   # use .max_by
-    #   new_driver = nil
-    #   # until @driver.status == :AVAILABLE do
-    #   @drivers.each do |driver|
-    #     if driver.status == :AVAILABLE
-    #       new_driver = driver.id
-    #       # driver.status = :UNAVAILABLE
-    #     else
-    #       new_driver = nil
-    #     end
-    #   end
-    #   new_start_time = Time.now
-    #   new_trip_info = {
-    #     id: nil,
-    #     driver: new_driver,
-    #     passenger: passenger,
-    #     start_time: new_start_time,
-    #     end_time: nil,
-    #     cost: nil,
-    #     rating: nil
-    #   }
-    #   new_trip = RideShare::Trip.new(new_trip_info)
-    #   return new_trip
-    # end
+    def inspect
+      "#<#{self.class.name}:0x#{self.object_id.to_s(16)}>"
+    end
 
-
->>>>>>> request_trip method and tests in progress
-    # In Ruby, by default, all methods are 'public'. We can circumvent this by creating a private method, so that no other classes or objects can call it. Any methods listed under the 'private' keyword will be private. Often simple helper methods go here. NOTE: In Ruby, in general, order of method definitions does not matter (except for 'private') but in other languages, order does matter.
     private
+
+    def verify_passenger(input_id)
+      @passengers.find { |passenger| input_id == passenger.id }
+    end
 
     def next_available_driver
       @drivers.find { |driver| driver.available? }

@@ -1,4 +1,6 @@
 require_relative 'spec_helper'
+require 'awesome_print'
+require 'pry'
 
 describe "TripDispatcher class" do
   describe "Initializer" do
@@ -99,59 +101,45 @@ describe "TripDispatcher class" do
       @dispatcher_2 = RideShare::TripDispatcher.new
     end
 
-<<<<<<< HEAD
     let(:dispatcher) { RideShare::TripDispatcher.new }
 
-    it "iterates through all drivers and selects the first driver where status is :AVAILABLE" do
+    it "selects the first available driver" do
       trip = dispatcher.request_trip(10)
-
+      # binding.pry
+      trip.id.must_equal 601
       trip.driver.id.must_equal 2
-      new_trip.passenger.must_equal 10
-      new_trip.must_be_instance_of RideShare::Trip
-      new_trip.id.must_be_nil
-      new_trip.end_time.must_be_nil
-      new_trip.cost.must_be_nil
-      new_trip.rating.must_be_nil
+      trip.passenger.id.must_equal 10
+      trip.must_be_instance_of RideShare::Trip
+      trip.end_time.must_be_nil
+      trip.cost.must_be_nil
+      trip.rating.must_be_nil
+    end
 
       it "return nil if no drivers are available" do
         @dispatcher_2.drivers = []
         new_trip = @dispatcher_2.request_trip(5)
-        binding.pry
-
-        new_trip.new_driver.must_be_nil
-=======
-
-
->>>>>>> request_trip method and tests in progress
-    end
+        new_trip.driver.must_be_nil
+      end
 
     it "changes driver status to UNAVAILABLE" do
       trip = dispatcher.request_trip(5)
-
       trip.driver.status.must_equal :UNAVAILABLE
     end
-    it "raises an error or return nil if no drivers are available"
-    it "stores the current time as the start_time"
 
-    it "sets the defaults for end_time, cost, and rating to nil" do
-
+    it "stores the current time as the start_time" do
+      trip = dispatcher.request_trip(5)
+      trip.start_time.must_be_instance_of Time
     end
 
-    it "creates a new instance of Trip" do
+    it "sets the defaults for end_time, cost, and rating to nil"
 
-    end
-# These tests will be testing that the new helper methods are being called appropriately...
-    it "stores new instance of Trip in corresponding passenger's collection of Trips" do
+    it "creates a new instance of Trip"
+    # These tests will be testing that the new helper methods are being called appropriately...
+    it "stores new instance of Trip in corresponding passenger's collection of Trips"
 
-    end
+    it "stores new instance of Trip in corresponding driver's collection of Trips"
 
-    it "stores new instance of Trip in corresponding driver's collection of Trips" do
-
-    end
-
-    it "stores new instance of Trip in TripDispatcher's collection of Trips" do
-
-    end
+    it "stores new instance of Trip in TripDispatcher's collection of Trips"
 
   end
 end
