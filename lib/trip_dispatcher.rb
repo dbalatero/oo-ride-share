@@ -89,8 +89,20 @@ module RideShare
       trips
     end
 
+    def request_trip(passenger_id)
+      driver = next_available_driver
+      driver.unavailable!
+
+      Trip.new(driver: driver)
+    end
+
     # In Ruby, by default, all methods are 'public'. We can circumvent this by creating a private method, so that no other classes or objects can call it. Any methods listed under the 'private' keyword will be private. Often simple helper methods go here. NOTE: In Ruby, in general, order of method definitions does not matter (except for 'private') but in other languages, order does matter.
     private
+
+    def next_available_driver
+      @drivers.find { |driver| driver.available? }
+    end
+
 
     def check_id(id)
       if id == nil || id <= 0

@@ -60,6 +60,12 @@ module RideShare
       return avg_rev_per_hour.round(2)
     end
 
+    def available?
+      status == :AVAILABLE
+    end
 
+    def unavailable!
+      @status = :UNAVAILABLE
+    end
   end
 end

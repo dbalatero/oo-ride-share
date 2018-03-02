@@ -99,17 +99,21 @@ describe "TripDispatcher class" do
     #
     # end
 
+    let(:dispatcher) { RideShare::TripDispatcher.new }
+
     it "iterates through all drivers and selects the first driver where status is :AVAILABLE" do
+      trip = dispatcher.request_trip(10)
 
+      trip.driver.id.must_equal 2
     end
 
-    it "raises an error or return nil if no drivers are available" do
+    it "changes driver status to UNAVAILABLE" do
+      trip = dispatcher.request_trip(5)
 
+      trip.driver.status.must_equal :UNAVAILABLE
     end
-
-    it "stores the current time as the start_time" do
-
-    end
+    it "raises an error or return nil if no drivers are available"
+    it "stores the current time as the start_time"
 
     it "sets the defaults for end_time, cost, and rating to nil" do
 
