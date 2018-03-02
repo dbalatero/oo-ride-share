@@ -97,7 +97,12 @@ module RideShare
         driver.unavailable!
       end
 
-      Trip.new(id: trips.length + 1, driver: driver, passenger: passenger, start_time: Time.now)
+      new_trip = Trip.new(id: trips.length + 1, driver: driver, passenger: passenger, start_time: Time.now)
+      passenger.add_trip(new_trip)
+      # driver.add_trip(new_trip)
+      # @trips << new_trip
+
+      return new_trip
     end
 
     def inspect

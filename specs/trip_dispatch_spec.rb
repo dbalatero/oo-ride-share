@@ -103,23 +103,24 @@ describe "TripDispatcher class" do
 
     let(:dispatcher) { RideShare::TripDispatcher.new }
 
+    it "creates a new instance of Trip" do
+      trip = dispatcher.request_trip(10)
+      trip.must_be_instance_of RideShare::Trip
+    end
+
     it "selects the first available driver" do
       trip = dispatcher.request_trip(10)
       # binding.pry
       trip.id.must_equal 601
       trip.driver.id.must_equal 2
-      trip.passenger.id.must_equal 10
-      trip.must_be_instance_of RideShare::Trip
-      trip.end_time.must_be_nil
-      trip.cost.must_be_nil
-      trip.rating.must_be_nil
+      # trip.passenger.id.must_equal 10
     end
 
-      it "return nil if no drivers are available" do
-        @dispatcher_2.drivers = []
-        new_trip = @dispatcher_2.request_trip(5)
-        new_trip.driver.must_be_nil
-      end
+    it "return nil if no drivers are available" do
+      @dispatcher_2.drivers = []
+      trip = @dispatcher_2.request_trip(5)
+      trip.driver.must_be_nil
+    end
 
     it "changes driver status to UNAVAILABLE" do
       trip = dispatcher.request_trip(5)
@@ -131,13 +132,29 @@ describe "TripDispatcher class" do
       trip.start_time.must_be_instance_of Time
     end
 
-    it "sets the defaults for end_time, cost, and rating to nil"
+    it "sets the defaults for end_time, cost, and rating to nil" do
+      trip = dispatcher.request_trip(20)
 
-    it "creates a new instance of Trip"
-    # These tests will be testing that the new helper methods are being called appropriately...
-    it "stores new instance of Trip in corresponding passenger's collection of Trips"
+      trip.end_time.must_be_nil
+      trip.cost.must_be_nil
+      trip.rating.must_be_nil
+    end
 
-    it "stores new instance of Trip in corresponding driver's collection of Trips"
+    it "stores new instance of Trip in corresponding passenger's collection of Trips" do
+      trip = dispatcher.request_trip(7)
+
+      trip.passenger.trips.length.must_equal 4
+    end
+
+    # it "stores new instance of Trip in corresponding driver's collection of Trips" do
+    #   # drivers_current_trips = @dispatcher_2.driver.trips.dup
+    #   # binding.pry
+    #
+    #   trip = dispatcher.request_trip(10)
+    #   binding.pry
+
+    #
+    # end
 
     it "stores new instance of Trip in TripDispatcher's collection of Trips"
 
