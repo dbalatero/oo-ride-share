@@ -49,7 +49,7 @@ module RideShare
       return total_rev.round(2)
     end
 
-    def total_hours_driving
+    def total_hours_drivingt
       total_seconds = @trips.map{ |trip| trip.end_time - trip.start_time}.inject(0, :+)
       total_hours = total_seconds / 3600
       return total_hours.round(2)

@@ -95,16 +95,34 @@ describe "TripDispatcher class" do
 
   describe "request_trip(passenger_id) method" do
 
-    # it "verifies the validity of the passenger_id" do
-    #
-    # end
+    before do
+      @dispatcher_2 = RideShare::TripDispatcher.new
+    end
 
+<<<<<<< HEAD
     let(:dispatcher) { RideShare::TripDispatcher.new }
 
     it "iterates through all drivers and selects the first driver where status is :AVAILABLE" do
       trip = dispatcher.request_trip(10)
 
       trip.driver.id.must_equal 2
+      new_trip.passenger.must_equal 10
+      new_trip.must_be_instance_of RideShare::Trip
+      new_trip.id.must_be_nil
+      new_trip.end_time.must_be_nil
+      new_trip.cost.must_be_nil
+      new_trip.rating.must_be_nil
+
+      it "return nil if no drivers are available" do
+        @dispatcher_2.drivers = []
+        new_trip = @dispatcher_2.request_trip(5)
+        binding.pry
+
+        new_trip.new_driver.must_be_nil
+=======
+
+
+>>>>>>> request_trip method and tests in progress
     end
 
     it "changes driver status to UNAVAILABLE" do
