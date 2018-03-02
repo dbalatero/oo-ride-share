@@ -93,15 +93,15 @@ module RideShare
     def request_trip(passenger_id)
       passenger = verify_passenger(passenger_id)
       driver = next_available_driver
-      if driver != nil
-        driver.unavailable!
-      end
 
       new_trip = Trip.new(id: trips.length + 1, driver: driver, passenger: passenger, start_time: Time.now)
-      passenger.add_trip(new_trip)
-      # driver.add_trip(new_trip)
-      # @trips << new_trip
 
+      passenger.add_trip(new_trip)
+      if driver != nil
+        driver.unavailable!
+        driver.add_trip(new_trip)
+      end
+      @trips << new_trip
       return new_trip
     end
 

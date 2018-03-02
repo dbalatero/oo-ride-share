@@ -110,10 +110,10 @@ describe "TripDispatcher class" do
 
     it "selects the first available driver" do
       trip = dispatcher.request_trip(10)
-      # binding.pry
+
       trip.id.must_equal 601
       trip.driver.id.must_equal 2
-      # trip.passenger.id.must_equal 10
+      trip.passenger.id.must_equal 10
     end
 
     it "return nil if no drivers are available" do
@@ -142,21 +142,18 @@ describe "TripDispatcher class" do
 
     it "stores new instance of Trip in corresponding passenger's collection of Trips" do
       trip = dispatcher.request_trip(7)
-
       trip.passenger.trips.length.must_equal 4
     end
 
-    # it "stores new instance of Trip in corresponding driver's collection of Trips" do
-    #   # drivers_current_trips = @dispatcher_2.driver.trips.dup
-    #   # binding.pry
-    #
-    #   trip = dispatcher.request_trip(10)
-    #   binding.pry
+    it "stores new instance of Trip in corresponding driver's collection of Trips" do
+      trip = dispatcher.request_trip(7)
+      trip.driver.trips.must_include trip
+    end
 
-    #
-    # end
-
-    it "stores new instance of Trip in TripDispatcher's collection of Trips"
+    it "stores new instance of Trip in TripDispatcher's collection of Trips" do
+      trip = dispatcher.request_trip(7)
+      dispatcher.trips.must_include trip
+    end
 
   end
 end
