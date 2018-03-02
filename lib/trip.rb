@@ -18,14 +18,13 @@ module RideShare
     end
 
     def duration
-      @duration = @end_time - @start_time
-      return @duration
+      @end_time - @start_time
     end
 
     def inspect
       "#<#{self.class.name}:0x#{self.object_id.to_s(16)}>"
     end
-    
+
     private
 
     def check_cost(cost_input)

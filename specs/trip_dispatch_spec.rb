@@ -97,34 +97,32 @@ describe "TripDispatcher class" do
 
   describe "request_trip(passenger_id) method" do
 
-    before do
-      @dispatcher_2 = RideShare::TripDispatcher.new
-    end
-
+    # I think this let statement is legal in Minitest?
     let(:dispatcher) { RideShare::TripDispatcher.new }
 
     it "creates a new instance of Trip" do
       trip = dispatcher.request_trip(10)
       trip.must_be_instance_of RideShare::Trip
+      trip.id.must_equal 601
+      trip.passenger.id.must_equal 10
     end
 
     it "selects the first available driver" do
       trip = dispatcher.request_trip(10)
 
-      trip.id.must_equal 601
       trip.driver.id.must_equal 2
-      trip.passenger.id.must_equal 10
-    end
-
-    it "return nil if no drivers are available" do
-      @dispatcher_2.drivers = []
-      trip = @dispatcher_2.request_trip(5)
-      trip.driver.must_be_nil
+      trip.driver.name.must_equal "Emory Rosenbaum"
     end
 
     it "changes driver status to UNAVAILABLE" do
       trip = dispatcher.request_trip(5)
       trip.driver.status.must_equal :UNAVAILABLE
+    end
+
+    it "return nil if no drivers are available" do
+      dispatcher.drivers = []
+      trip = dispatcher.request_trip(5)
+      trip.driver.must_be_nil
     end
 
     it "stores the current time as the start_time" do
@@ -143,6 +141,7 @@ describe "TripDispatcher class" do
     it "stores new instance of Trip in corresponding passenger's collection of Trips" do
       trip = dispatcher.request_trip(7)
       trip.passenger.trips.length.must_equal 4
+      trip.passenger.trips.must_include trip
     end
 
     it "stores new instance of Trip in corresponding driver's collection of Trips" do

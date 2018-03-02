@@ -91,6 +91,7 @@ describe "Passenger class" do
     it "returns the total amount of money that a passenger has spent on all of their trips" do
       @passenger_1.total_spent.must_equal 43.97
       @passenger_1.total_spent.must_be_kind_of Float
+      @passenger_1.trips.length.must_equal 2
     end
   end
 

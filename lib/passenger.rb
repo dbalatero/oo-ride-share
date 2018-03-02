@@ -22,13 +22,11 @@ module RideShare
     end
 
     def total_spent
-      all_spent = @trips.map{ |trip| trip.cost }.inject(0, :+)
-      return all_spent.round(2)
+      @trips.map{ |trip| trip.cost }.inject(0, :+).round(2)
     end
 
     def total_time
-      all_time = @trips.map{ |trip| trip.end_time - trip.start_time}.inject(0, :+)
-      return all_time
+      @trips.map{ |trip| trip.end_time - trip.start_time}.inject(0, :+)
     end
 
   end
