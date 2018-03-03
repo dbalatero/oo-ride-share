@@ -1,5 +1,6 @@
 require 'csv'
 require 'time'
+require 'pry'
 
 require_relative 'driver'
 require_relative 'passenger'
@@ -18,6 +19,7 @@ module RideShare
 
     def load_drivers
       my_file = CSV.open('support/drivers.csv', headers: true)
+      # my_file = CSV.open('../support/drivers.csv', headers: true)
 
       all_drivers = []
       my_file.each do |line|
@@ -48,6 +50,7 @@ module RideShare
       passengers = []
 
       CSV.read('support/passengers.csv', headers: true).each do |line|
+      # CSV.read('../support/passengers.csv', headers: true).each do |line|
         input_data = {}
         input_data[:id] = line[0].to_i
         input_data[:name] = line[1]
@@ -67,6 +70,7 @@ module RideShare
     def load_trips
       trips = []
       trip_data = CSV.open('support/trips.csv', 'r', headers: true, header_converters: :symbol)
+      # trip_data = CSV.open('../support/trips.csv', 'r', headers: true, header_converters: :symbol)
 
       trip_data.each do |raw_trip|
         driver = find_driver(raw_trip[:driver_id].to_i)
@@ -115,10 +119,27 @@ module RideShare
       @passengers.find { |passenger| input_id == passenger.id }
     end
 
+# find all drivers where status is available and they have no in-progress trips
     def next_available_driver
-      @drivers.find { |driver| driver.available? }
+      # binding.pry
+      drivers_array = @drivers.find_all { |driver| driver.available? && driver.last_trip_not_nil? }
+      driver_with_oldest_trips(drivers_array)
     end
 
+# select driver whose most recent trip ended the longest time ago
+    def driver_with_oldest_trips(available_drivers)
+      driver_with_oldest_trip = nil
+      oldest_trip_time = Time.now
+      available_drivers.each do |driver|
+        if driver.trips.empty?
+          return driver
+        elsif driver.trips.last.end_time < oldest_trip_time
+          oldest_trip_time = driver.trips.last.end_time
+          driver_with_oldest_trip = driver
+        end
+      end
+      return driver_with_oldest_trip
+    end
 
     def check_id(id)
       if id == nil || id <= 0
@@ -127,3 +148,6 @@ module RideShare
     end
   end
 end
+
+dispatcher = RideShare::TripDispatcher.new
+dispatcher.request_trip(18)

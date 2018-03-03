@@ -110,8 +110,8 @@ describe "TripDispatcher class" do
     it "selects the first available driver" do
       trip = dispatcher.request_trip(10)
 
-      trip.driver.id.must_equal 2
-      trip.driver.name.must_equal "Emory Rosenbaum"
+      trip.driver.id.must_equal 100
+      trip.driver.name.must_equal "Minnie Dach"
     end
 
     it "changes driver status to UNAVAILABLE" do

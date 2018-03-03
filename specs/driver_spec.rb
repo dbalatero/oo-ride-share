@@ -123,7 +123,7 @@ describe "Driver class" do
       drivers_array[1].avg_revenue_per_hour
 
       trip = dispatcher.request_trip(15)
-
+      # binding.pry
       trip.driver.avg_revenue_per_hour.must_equal drivers_array[1].avg_revenue_per_hour
 
     end

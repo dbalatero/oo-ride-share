@@ -77,6 +77,28 @@ module RideShare
       status == :AVAILABLE
     end
 
+    def last_trip_not_nil?
+      # binding.pry
+      if @trips.empty?
+        return true
+      else
+        @trips.last.end_time != nil
+      end
+    end
+
+    # # select driver whose most recent trip ended the longest time ago
+    # def driver_with_oldest_trips(input_array)
+    #   driver_with_oldest_trip = nil
+    #   oldest_trip_time = nil
+    #   input_array.each do |driver|
+    #     if driver.trips.last.end_time < oldest_trip_time
+    #       oldest_trip_time = driver.trips.last.end_time
+    #       driver_with_oldest_trip = driver
+    #     end
+    #   end
+    #   return driver_with_oldest_trip
+    # end
+
     def unavailable!
       @status = :UNAVAILABLE
     end
