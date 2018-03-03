@@ -93,6 +93,21 @@ describe "Passenger class" do
       @passenger_1.total_spent.must_be_kind_of Float
       @passenger_1.trips.length.must_equal 2
     end
+
+    it "ignores the trip that is in-progress" do
+      dispatcher = RideShare::TripDispatcher.new
+
+      passenger = RideShare::Passenger.new(id: 32, name: "Melba Torphy", phone: "5246.356.5591 x70530 ", trips: [])
+
+      trip = RideShare::Trip.new({id: 5, driver: 1, passenger: passenger, start_time: "2016-04-05T14:01:00+00:00", end_time: "2016-04-05T14:09:00+00:00", cost: "17.39", rating: 2})
+      passenger.add_trip(trip)
+
+      dispatcher.request_trip(32)
+      # binding.pry
+      passenger.total_spent.must_equal 17.39
+      passenger.id.must_equal 32
+      passenger.trips.must_include trip
+    end
   end
 
   describe "total_time method" do
@@ -111,5 +126,7 @@ describe "Passenger class" do
       @passenger_2.total_time.must_equal 3360.0
       @passenger_2.total_time.must_be_kind_of Float
     end
+
+
   end
 end

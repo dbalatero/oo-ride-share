@@ -105,10 +105,8 @@ describe "Driver class" do
 
     it "gets total time driver spent driving across all trips" do
       total_time = @driver_1.total_hours_driving
-
       total_time.must_equal 1.57
       # in seconds, total is 5640.0
-
     end
   end
 
@@ -116,8 +114,18 @@ describe "Driver class" do
 
     it "gets average revenue per hour for a drivers' trips" do
       avg_per_hour = @driver_1.avg_revenue_per_hour
-
       avg_per_hour.must_equal 30.76
+    end
+
+    it "ignores an in-progress trip when calculating average revenue per hour" do
+      dispatcher = RideShare::TripDispatcher.new
+      drivers_array = dispatcher.drivers.dup
+      drivers_array[1].avg_revenue_per_hour
+
+      trip = dispatcher.request_trip(15)
+
+      trip.driver.avg_revenue_per_hour.must_equal drivers_array[1].avg_revenue_per_hour
+
     end
 
   end
