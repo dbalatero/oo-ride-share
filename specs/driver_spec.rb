@@ -120,11 +120,14 @@ describe "Driver class" do
     it "ignores an in-progress trip when calculating average revenue per hour" do
       dispatcher = RideShare::TripDispatcher.new
       drivers_array = dispatcher.drivers.dup
-      drivers_array[1].avg_revenue_per_hour
+      drivers_array[0].avg_revenue_per_hour
 
       trip = dispatcher.request_trip(15)
-      # binding.pry
-      trip.driver.avg_revenue_per_hour.must_equal drivers_array[1].avg_revenue_per_hour
+      trip_2 = dispatcher.request_trip(19)
+      trip_3 = dispatcher.request_trip(22)
+
+      binding.pry
+      trip_2.driver.avg_revenue_per_hour.must_equal drivers_array[0].avg_revenue_per_hour
 
     end
 

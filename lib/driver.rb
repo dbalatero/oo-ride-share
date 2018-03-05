@@ -69,7 +69,9 @@ module RideShare
     end
 
     def avg_revenue_per_hour
-      avg_rev_per_hour = get_total_revenue / total_hours_driving
+      if last_trip_not_nil?
+        avg_rev_per_hour = get_total_revenue / total_hours_driving
+      end
       return avg_rev_per_hour.round(2)
     end
 
@@ -81,6 +83,8 @@ module RideShare
       # binding.pry
       if @trips.empty?
         return true
+      # elsif @trips.last.end_time == nil
+      #   return false
       else
         @trips.last.end_time != nil
       end
