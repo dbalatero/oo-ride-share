@@ -1,6 +1,20 @@
 require_relative 'spec_helper'
+require 'pry'
 
 describe "Driver class" do
+
+  before do
+    @driver_1 = RideShare::Driver.new(id: 3, name: "Daryl Nitzsche", vin: "SAL6P2M2XNHC5Y656", status: "AVAILABLE")
+
+    trip_1 = RideShare::Trip.new({id: 430, driver: @driver_1, passenger: 15, start_time: "2016-02-10T21:07:00+00:00", end_time: "2016-02-10T21:21:00+00:00", cost: "23.88", rating: 5})
+    trip_2 = RideShare::Trip.new({id: 593, driver: @driver_1, passenger: 158, start_time: "2015-10-08T15:01:00+00:00", end_time: "2015-10-08T15:44:00+00:00", cost: "26.91", rating: 5})
+    trip_3 = RideShare::Trip.new({id: 312, driver: @driver_1, passenger: 279, start_time: "2015-10-07T01:03:00+00:00", end_time: "2015-10-07T01:40:00+00:00", cost: "14.52", rating: 1})
+
+    @driver_1.add_trip(trip_1)
+    @driver_1.add_trip(trip_2)
+    @driver_1.add_trip(trip_3)
+
+  end
 
   describe "Driver instantiation" do
     before do
@@ -41,7 +55,7 @@ describe "Driver class" do
     before do
       pass = RideShare::Passenger.new(id: 1, name: "Ada", phone: "412-432-7640")
       @driver = RideShare::Driver.new(id: 3, name: "Lovelace", vin: "12345678912345678")
-      @trip = RideShare::Trip.new({id: 8, driver: @driver, passenger: pass, date: "2016-08-08", rating: 5})
+      @trip = RideShare::Trip.new({id: 8, driver: @driver, passenger: pass, start_time: "2015-12-14T05:19:00+00:00", end_time: "2015-12-14T05:31:00+00:00", rating: 5})
     end
 
     it "throws an argument error if trip is not provided" do
@@ -58,7 +72,7 @@ describe "Driver class" do
   describe "average_rating method" do
     before do
       @driver = RideShare::Driver.new(id: 54, name: "Rogers Bartell IV", vin: "1C9EVBRM0YBC564DZ")
-      trip = RideShare::Trip.new({id: 8, driver: @driver, passenger: nil, date: "2016-08-08", rating: 5})
+      trip = RideShare::Trip.new({id: 8, driver: @driver, passenger: nil, start_time: "2016-03-03T10:42:00+00:00", end_time: "2016-03-03T11:27:00+00:00", rating: 5})
       @driver.add_trip(trip)
     end
 
@@ -76,5 +90,46 @@ describe "Driver class" do
       driver = RideShare::Driver.new(id: 54, name: "Rogers Bartell IV", vin: "1C9EVBRM0YBC564DZ")
       driver.average_rating.must_equal 0
     end
+
+  end
+
+  describe "get_total_revenue method" do
+
+    it "gets total revenue for a driver" do
+      total_rev = @driver_1.get_total_revenue
+      total_rev.must_equal 48.29
+    end
+  end
+
+  describe "total_hours_driving method" do
+
+    it "gets total time driver spent driving across all trips" do
+      total_time = @driver_1.total_hours_driving
+      total_time.must_equal 1.57
+      # in seconds, total is 5640.0
+    end
+  end
+
+  describe "avg_revenue_per_hour method" do
+
+    it "gets average revenue per hour for a drivers' trips" do
+      avg_per_hour = @driver_1.avg_revenue_per_hour
+      avg_per_hour.must_equal 30.76
+    end
+
+    it "ignores an in-progress trip when calculating average revenue per hour" do
+      dispatcher = RideShare::TripDispatcher.new
+      drivers_array = dispatcher.drivers.dup
+      drivers_array[0].avg_revenue_per_hour
+
+      trip = dispatcher.request_trip(15)
+      trip_2 = dispatcher.request_trip(19)
+      trip_3 = dispatcher.request_trip(22)
+
+      binding.pry
+      trip_2.driver.avg_revenue_per_hour.must_equal drivers_array[0].avg_revenue_per_hour
+
+    end
+
   end
 end
