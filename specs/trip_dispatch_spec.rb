@@ -1,4 +1,6 @@
 require_relative 'spec_helper'
+require 'awesome_print'
+require 'pry'
 
 describe "TripDispatcher class" do
   describe "Initializer" do
@@ -87,6 +89,70 @@ describe "TripDispatcher class" do
       driver.trips.must_include trip
       passenger.must_be_instance_of RideShare::Passenger
       passenger.trips.must_include trip
+      trip.start_time.must_be_instance_of Time
+      trip.end_time.must_be_instance_of Time
+
     end
+  end
+
+  describe "request_trip(passenger_id) method" do
+
+    # I think this let statement is legal in Minitest?
+    let(:dispatcher) { RideShare::TripDispatcher.new }
+
+    it "creates a new instance of Trip" do
+      trip = dispatcher.request_trip(10)
+      trip.must_be_instance_of RideShare::Trip
+      trip.id.must_equal 601
+      trip.passenger.id.must_equal 10
+    end
+
+    it "selects the first available driver" do
+      trip = dispatcher.request_trip(10)
+
+      trip.driver.id.must_equal 100
+      trip.driver.name.must_equal "Minnie Dach"
+    end
+
+    it "changes driver status to UNAVAILABLE" do
+      trip = dispatcher.request_trip(5)
+      trip.driver.status.must_equal :UNAVAILABLE
+    end
+
+    it "return nil if no drivers are available" do
+      dispatcher.drivers = []
+      trip = dispatcher.request_trip(5)
+      trip.driver.must_be_nil
+    end
+
+    it "stores the current time as the start_time" do
+      trip = dispatcher.request_trip(5)
+      trip.start_time.must_be_instance_of Time
+    end
+
+    it "sets the defaults for end_time, cost, and rating to nil" do
+      trip = dispatcher.request_trip(20)
+
+      trip.end_time.must_be_nil
+      trip.cost.must_be_nil
+      trip.rating.must_be_nil
+    end
+
+    it "stores new instance of Trip in corresponding passenger's collection of Trips" do
+      trip = dispatcher.request_trip(7)
+      trip.passenger.trips.length.must_equal 4
+      trip.passenger.trips.must_include trip
+    end
+
+    it "stores new instance of Trip in corresponding driver's collection of Trips" do
+      trip = dispatcher.request_trip(7)
+      trip.driver.trips.must_include trip
+    end
+
+    it "stores new instance of Trip in TripDispatcher's collection of Trips" do
+      trip = dispatcher.request_trip(7)
+      dispatcher.trips.must_include trip
+    end
+
   end
 end

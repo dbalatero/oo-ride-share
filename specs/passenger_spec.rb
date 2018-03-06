@@ -36,7 +36,7 @@ describe "Passenger class" do
   describe "trips property" do
     before do
       @passenger = RideShare::Passenger.new(id: 9, name: "Merl Glover III", phone: "1-602-620-2330 x3723", trips: [])
-      trip = RideShare::Trip.new({id: 8, driver: nil, passenger: @passenger, date: "2016-08-08", rating: 5})
+      trip = RideShare::Trip.new({id: 8, driver: nil, passenger: @passenger, start_time: "2016-08-21T08:51:00+00:00", end_time: "2016-08-21T09:29:00+00:00", rating: 5})
 
       @passenger.add_trip(trip)
     end
@@ -58,7 +58,7 @@ describe "Passenger class" do
     before do
       @passenger = RideShare::Passenger.new(id: 9, name: "Merl Glover III", phone: "1-602-620-2330 x3723")
       driver = RideShare::Driver.new(id: 3, name: "Lovelace", vin: "12345678912345678")
-      trip = RideShare::Trip.new({id: 8, driver: driver, passenger: @passenger, date: "2016-08-08", rating: 5})
+      trip = RideShare::Trip.new({id: 8, driver: driver, passenger: @passenger, start_time: "2015-09-13T22:47:00+00:00", end_time: "2015-09-13T23:17:00+00:00", rating: 5})
 
       @passenger.add_trip(trip)
     end
@@ -74,5 +74,59 @@ describe "Passenger class" do
         driver.must_be_kind_of RideShare::Driver
       end
     end
+  end
+
+  describe "total_spent method" do
+
+    before do
+      @passenger_1 = RideShare::Passenger.new(id: 54, name: "Gracie Emmerich", phone: "591-707-1595 x0908", trips: [])
+
+      trip_1 = RideShare::Trip.new({id: 1, driver: 1, passenger: @passenger_1, start_time: "2016-04-05T14:01:00+00:00", end_time: "2016-04-05T14:09:00+00:00", cost: "17.39", rating: 3})
+      trip_2 = RideShare::Trip.new({id: 342, driver: 39, passenger: @passenger_1, start_time: "2016-02-29T04:02:00+00:00", end_time: "2016-02-29T04:50:00+00:00", cost: "26.58", rating: 2})
+
+      @passenger_1.add_trip(trip_1)
+      @passenger_1.add_trip(trip_2)
+    end
+
+    it "returns the total amount of money that a passenger has spent on all of their trips" do
+      @passenger_1.total_spent.must_equal 43.97
+      @passenger_1.total_spent.must_be_kind_of Float
+      @passenger_1.trips.length.must_equal 2
+    end
+
+    it "ignores the trip that is in-progress" do
+      dispatcher = RideShare::TripDispatcher.new
+
+      passenger = RideShare::Passenger.new(id: 32, name: "Melba Torphy", phone: "5246.356.5591 x70530 ", trips: [])
+
+      trip = RideShare::Trip.new({id: 5, driver: 1, passenger: passenger, start_time: "2016-04-05T14:01:00+00:00", end_time: "2016-04-05T14:09:00+00:00", cost: "17.39", rating: 2})
+      passenger.add_trip(trip)
+
+      dispatcher.request_trip(32)
+      # binding.pry
+      passenger.total_spent.must_equal 17.39
+      passenger.id.must_equal 32
+      passenger.trips.must_include trip
+    end
+  end
+
+  describe "total_time method" do
+
+    before do
+      @passenger_2 = RideShare::Passenger.new(id: 54, name: "Gracie Emmerich", phone: "591-707-1595 x0908", trips: [])
+
+      trip_1 = RideShare::Trip.new({id: 1, driver: 1, passenger: @passenger_2, start_time: "2016-04-05T14:01:00+00:00", end_time: "2016-04-05T14:09:00+00:00", cost: "17.39", rating: 3})
+      trip_2 = RideShare::Trip.new({id: 342, driver: 39, passenger: @passenger_2, start_time: "2016-02-29T04:02:00+00:00", end_time: "2016-02-29T04:50:00+00:00", cost: "26.58", rating: 2})
+
+      @passenger_2.add_trip(trip_1)
+      @passenger_2.add_trip(trip_2)
+    end
+
+    it "returns the total amount of time that a passenger has spent on all of their trips" do
+      @passenger_2.total_time.must_equal 3360.0
+      @passenger_2.total_time.must_be_kind_of Float
+    end
+
+
   end
 end

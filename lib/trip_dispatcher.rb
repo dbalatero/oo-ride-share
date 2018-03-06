@@ -1,5 +1,6 @@
 require 'csv'
 require 'time'
+require 'pry'
 
 require_relative 'driver'
 require_relative 'passenger'
@@ -7,7 +8,8 @@ require_relative 'trip'
 
 module RideShare
   class TripDispatcher
-    attr_reader :drivers, :passengers, :trips
+    attr_reader :passengers, :trips
+    attr_accessor :drivers
 
     def initialize
       @drivers = load_drivers
@@ -17,6 +19,7 @@ module RideShare
 
     def load_drivers
       my_file = CSV.open('support/drivers.csv', headers: true)
+      # my_file = CSV.open('../support/drivers.csv', headers: true)
 
       all_drivers = []
       my_file.each do |line|
@@ -47,6 +50,7 @@ module RideShare
       passengers = []
 
       CSV.read('support/passengers.csv', headers: true).each do |line|
+      # CSV.read('../support/passengers.csv', headers: true).each do |line|
         input_data = {}
         input_data[:id] = line[0].to_i
         input_data[:name] = line[1]
@@ -66,6 +70,7 @@ module RideShare
     def load_trips
       trips = []
       trip_data = CSV.open('support/trips.csv', 'r', headers: true, header_converters: :symbol)
+      # trip_data = CSV.open('../support/trips.csv', 'r', headers: true, header_converters: :symbol)
 
       trip_data.each do |raw_trip|
         driver = find_driver(raw_trip[:driver_id].to_i)
@@ -75,8 +80,8 @@ module RideShare
           id: raw_trip[:id].to_i,
           driver: driver,
           passenger: passenger,
-          start_time: raw_trip[:start_time],
-          end_time: raw_trip[:end_time],
+          start_time: Time.parse(raw_trip[:start_time]),
+          end_time: Time.parse(raw_trip[:end_time]),
           cost: raw_trip[:cost].to_f,
           rating: raw_trip[:rating].to_i
         }
@@ -86,11 +91,55 @@ module RideShare
         passenger.add_trip(trip)
         trips << trip
       end
-
       trips
     end
 
+    def request_trip(passenger_id)
+      passenger = verify_passenger(passenger_id)
+      driver = next_available_driver
+
+      new_trip = Trip.new(passenger: passenger, id: trips.length + 1, driver: driver, start_time: Time.now)
+
+      passenger.add_trip(new_trip)
+      if driver != nil
+        driver.unavailable!
+        driver.add_trip(new_trip)
+      end
+      @trips << new_trip
+      return new_trip
+    end
+
+    def inspect
+      "#<#{self.class.name}:0x#{self.object_id.to_s(16)}>"
+    end
+
     private
+
+    def verify_passenger(input_id)
+      @passengers.find { |passenger| input_id == passenger.id }
+    end
+
+# find all drivers where status is available and they have no in-progress trips
+    def next_available_driver
+      # binding.pry
+      drivers_array = @drivers.find_all { |driver| driver.available? && driver.last_trip_not_nil? }
+      driver_with_oldest_trips(drivers_array)
+    end
+
+# select driver whose most recent trip ended the longest time ago
+    def driver_with_oldest_trips(available_drivers)
+      driver_with_oldest_trip = nil
+      oldest_trip_time = Time.now
+      available_drivers.each do |driver|
+        if driver.trips.empty?
+          return driver
+        elsif driver.trips.last.end_time < oldest_trip_time
+          oldest_trip_time = driver.trips.last.end_time
+          driver_with_oldest_trip = driver
+        end
+      end
+      return driver_with_oldest_trip
+    end
 
     def check_id(id)
       if id == nil || id <= 0
@@ -99,3 +148,6 @@ module RideShare
     end
   end
 end
+
+dispatcher = RideShare::TripDispatcher.new
+dispatcher.request_trip(18)
